@@ -1,0 +1,28 @@
+- name: Create master node
+  hosts: localhost
+  vars:
+    master_ip: 192.168.20.100
+  tasks:
+    - name: Install required packages
+      community.general.homebrew:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - kubectl
+        - k3sup
+        - helm
+        - helmfile
+        - fluxcd/tap/flux
+
+    - name: Check master status
+      shell: vagrant status master | grep running
+      ignore_errors: yes
+      register: master_status
+      changed_when: "master_status.failed"
+
+    - name: Start master
+      shell: vagrant up
+      when: "master_status.failed"
+
+    - name: Install k3sup on master node and set k8s context
+      command: "k3sup install --ip {{ master_ip }} --merge --context k3s --k3s-extra-args '--no-deploy traefik' --user vagrant --ssh-key .vagrant/machines/master/virtualbox/private_key"
