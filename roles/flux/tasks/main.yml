@@ -1,0 +1,51 @@
+- name: Install Sealed Secrets Helm chart
+  community.kubernetes.helm:
+    name: sealed-secrets
+    chart_ref: stable/sealed-secrets
+    release_namespace: kube-system
+    wait: yes
+    atomic: yes
+
+- name: Save kubeseal cert
+  shell: kubeseal --fetch-cert -n kube-system --controller-name sealed-secrets > ./kubeseal-cert.pem
+
+- name: Create SSH key sealed secret for Flux
+  shell: |
+    kubectl create secret generic github-ssh-key --dry-run=client -n flux \
+    --from-file=/Users/{{ ansible_user_id }}/.ssh/{{ git_ssh_private_key_name | default('id_rsa') }} -o yaml | \
+    kubeseal --format yaml --cert {{ playbook_dir }}/kubeseal-cert.pem > {{ playbook_dir }}/manifests/secrets/github-ssh-key.yaml
+
+- name: Apply Flux sealed secret
+  community.kubernetes.k8s:
+    state: present
+    src: "{{ playbook_dir}}/manifests/secrets/github-ssh-key.yaml"
+
+- name: Install Flux Helm chart
+  community.kubernetes.helm:
+    name: fluxcd
+    chart_ref: fluxcd/flux
+    create_namespace: yes
+    release_namespace: flux
+    wait: yes
+    atomic: yes
+    values:
+      git:
+        url: "{{ git_repo_url }}"
+        branch: main
+        path: manifests/
+        secretName: github-ssh-key            
+
+- name: Apply Flux Helm Operator CRD
+  command: kubectl apply -f https://raw.githubusercontent.com/fluxcd/helm-operator/{{ flux_version }}/deploy/crds.yaml
+
+- name: Install Flux Operator chart
+  community.kubernetes.helm:
+    name: flux-helm-operator
+    chart_ref: fluxcd/helm-operator
+    create_namespace: yes
+    release_namespace: flux
+    wait: yes
+    atomic: yes
+    values:
+      helm:
+        versions: v3

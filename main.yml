@@ -3,6 +3,7 @@
   vars:
     master_ip: 192.168.20.100
     git_repo_url: https://github.com/adace123/k8s-homelab.git
+    git_ssh_private_key_name: github
     skip_brew_installs: false
     flux_version: 1.2.0
   environment:
@@ -20,13 +21,8 @@
         - fluxcd/tap/flux
         - kubectx
         - vagrant
+        - kubeseal
       when: "not skip_brew_installs"
-
-    - name: Install required pip packages
-      pip:
-        name: openshift
-        state: present
-      become: yes
 
     - name: Check master status
       shell: vagrant status master | grep running
@@ -59,39 +55,6 @@
         - {'name': 'stable', 'url': 'https://charts.helm.sh/stable'}
         - {'name': 'fluxcd', 'url': 'https://charts.fluxcd.io'}
 
-    - name: Install Flux Helm chart
-      community.kubernetes.helm:
-        name: fluxcd
-        chart_ref: fluxcd/flux
-        create_namespace: yes
-        release_namespace: flux
-        wait: yes
-        atomic: yes
-        values:
-          git:
-            url: "{{ git_repo_url }}"
-            path: manifests/
-
-    - name: Download Flux Helm Operator CRD
-      get_url:
-        url: https://raw.githubusercontent.com/fluxcd/helm-operator/{{ flux_version }}/deploy/crds.yaml
-        dest: /tmp/helm-operator-crds.yaml
-      register: download_flux
-
-    - name: Install Flux Helm Operator CRD
-      community.kubernetes.k8s:
-        state: present
-        src: /tmp/helm-operator-crds.yaml
-      when: download_flux.changed
-
-    - name: Install Flux Operator chart
-      community.kubernetes.helm:
-        name: flux-helm-operator
-        chart_ref: fluxcd/helm-operator
-        create_namespace: yes
-        release_namespace: flux
-        wait: yes
-        atomic: yes
-        values:
-          helm:
-            versions: v3
+    - name: Install Flux
+      include_role:
+        name: flux
