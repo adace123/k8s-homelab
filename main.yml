@@ -55,6 +55,16 @@
         - {'name': 'stable', 'url': 'https://charts.helm.sh/stable'}
         - {'name': 'fluxcd', 'url': 'https://charts.fluxcd.io'}
 
+    - name: Create namespaces
+      community.kubernetes.k8s:
+        name: "{{ item }}"
+        api_version: v1
+        kind: Namespace
+        state: present
+      with_items:
+        - prometheus-grafana
+        - istio-system
+
     - name: Install Flux
       include_role:
         name: flux
