@@ -1,0 +1,21 @@
+- name: Install Traefik
+  community.kubernetes.helm:
+    name: traefik
+    chart_ref: traefik/traefik
+    release_namespace: traefik
+    wait: yes
+    atomic: yes
+    wait_timeout: 5m
+    values:
+      providers:
+        kubernetesIngress:
+          publishedService:
+            enabled: true
+      logs:
+        general:
+          level: DEBUG
+
+- name: Create Traefik dashboard IngressRoute
+  community.kubernetes.k8s:
+    state: present
+    src: "{{ playbook_dir }}/roles/traefik/files/traefik-ingress.yaml"

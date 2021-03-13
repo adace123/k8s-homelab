@@ -1,0 +1,19 @@
+- name: Install ArgoCD
+  community.kubernetes.helm:
+    name: argo-cd
+    chart_ref: argo/argo-cd
+    release_namespace: argo-cd
+    wait: yes
+    atomic: yes
+    wait_timeout: 5m
+    values:
+      server:
+        extraArgs:
+          - --insecure
+        ingress:
+          enabled: true
+          annotations:
+            kubernetes.io/ingress.class: traefik
+          hosts:
+            - argocd.kube.local.io
+  register: argocd
