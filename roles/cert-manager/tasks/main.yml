@@ -1,0 +1,21 @@
+- name: Generate TLS secret if needed
+  include_tasks: "{{ playbook_dir }}/roles/cert-manager/tasks/generate-tls-secret.yml"
+
+- name: Install Cert Manager
+  community.kubernetes.helm:
+    name: cert-manager
+    chart_ref: jetstack/cert-manager
+    release_namespace: cert-manager
+    wait: yes
+    atomic: yes
+    wait_timeout: 5m
+    values:
+      installCRDs: true
+
+- name: Create ClusterIssuer and Certificate
+  community.kubernetes.k8s:
+    apply: yes
+    definition: "{{ lookup('file', '{{ item }}') | from_yaml }}"
+  with_items:
+    - "{{ playbook_dir }}/roles/cert-manager/files/issuer.yaml"
+    - "{{ playbook_dir }}/roles/cert-manager/files/certificate.yaml"

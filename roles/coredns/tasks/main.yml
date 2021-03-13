@@ -15,8 +15,7 @@
           domain: kube.local.io
           contents: |
             kube.local.io.   IN SOA sns.dns.icann.com. noc.dns.icann.com. 2015082541 7200 3600 1209600 3600
-            kube.local.io.   IN NS  b.iana-servers.net.
-            kube.local.io.   IN NS  a.iana-servers.net.
+            kube.local.io.   IN NS  192.168.20.100
             kube.local.io.   IN A   192.168.20.100
             *.kube.local.io. IN A   192.168.20.100
       servers:

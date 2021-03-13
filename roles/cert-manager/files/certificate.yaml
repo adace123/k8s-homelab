@@ -1,0 +1,16 @@
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata:
+  name: kubelocal-cert
+  namespace: cert-manager
+spec:
+  commonName: "*.kube.local.io"
+  secretName: kubelocal-cert
+  duration: 1000d
+  renewBefore: 900d
+  issuerRef:
+    name: letsencrypt-staging
+    kind: ClusterIssuer
+  dnsNames:
+    - "*.kube.local.io"
+    - "kube.local.io"
