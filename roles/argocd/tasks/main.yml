@@ -16,9 +16,9 @@
             kubernetes.io/ingress.class: traefik
             cert-manager.io/cluster-issuer: cluster-cert-issuer
           hosts:
-            - argocd.kube.local.io
+            - "argocd.{{ k8s_base_domain }}"
           tls:
             - secretName: argocd-tls
               hosts:
-                - argocd.kube.local.io
+                - "argocd.{{ k8s_base_domain }}"
   register: argocd

@@ -4,11 +4,11 @@ metadata:
   name: kubelocal-cert
   namespace: cert-manager
 spec:
-  commonName: "*.kube.local.io"
+  commonName: "*.{{ k8s_base_domain }}"
   secretName: kubelocal-cert
   issuerRef:
     name: cluster-cert-issuer
     kind: ClusterIssuer
   dnsNames:
-    - "*.kube.local.io"
-    - "kube.local.io"
+    - "*.{{ k8s_base_domain }}"
+    - "{{ k8s_base_domain }}"
