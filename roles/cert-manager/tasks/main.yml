@@ -1,6 +1,3 @@
-- name: Generate TLS secret if needed
-  include_tasks: "{{ playbook_dir }}/roles/cert-manager/tasks/generate-tls-secret.yml"
-
 - name: Install Cert Manager
   community.kubernetes.helm:
     name: cert-manager

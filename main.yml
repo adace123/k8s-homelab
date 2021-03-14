@@ -17,11 +17,9 @@
         - kubectl
         - k3sup
         - helm
-        - helmfile
-        - fluxcd/tap/flux
         - kubectx
         - vagrant
-        - kubeseal
+        - virtualbox
       when: "not skip_brew_installs"
 
     - name: Check master status
@@ -72,7 +70,6 @@
         - traefik
         - coredns
         - cert-manager
-        - acme-dns
 
     - name: Install Traefik
       include_role:

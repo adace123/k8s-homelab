@@ -6,10 +6,8 @@ metadata:
 spec:
   commonName: "*.kube.local.io"
   secretName: kubelocal-cert
-  duration: 1000d
-  renewBefore: 900d
   issuerRef:
-    name: letsencrypt-staging
+    name: cluster-cert-issuer
     kind: ClusterIssuer
   dnsNames:
     - "*.kube.local.io"
