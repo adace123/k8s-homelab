@@ -1,0 +1,65 @@
+- name: Enable cgroups
+  replace:
+    path: /boot/cmdline.txt
+    regexp: '^([\w](?!.*\b{{ item }}\b).*)$'
+    replace: '\1 {{ item }}'
+  with_items:
+    - cgroup_memory=1
+    - cgroup_enable=memory
+  register: enable_cgroups
+
+- name: Reboot
+  reboot:
+    msg: "Rebooting to enable cgroups"
+    reboot_timeout: 300
+  when: enable_cgroups.changed
+
+- name: Disable SWAP since kubernetes can't work with swap enabled (1/2)
+  command: swapoff -a
+  ignore_errors: yes
+
+- name: Disable SWAP in fstab since kubernetes can't work with swap enabled (2/2)
+  replace:
+    path: /etc/fstab
+    regexp: '^([^#].*?\sswap\s+sw\s+.*)$'
+    replace: '# \1'
+  ignore_errors: yes
+
+- name: Set iptables to legacy mode
+  shell: |
+    update-alternatives --set iptables /usr/sbin/iptables-legacy
+    update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy
+  ignore_errors: yes
+
+- name: Install k3s
+  shell: curl -sfL https://get.k3s.io | INSTALL_K3S_CHANNEL=latest sh -s - --disable=traefik
+  register: install_k3s
+
+- name: Ensure system compatibility with k3s
+  command: k3s check-config
+
+- name: Update server address in kubeconfig
+  replace:
+    path: /etc/rancher/k3s/k3s.yaml
+    regexp: "https://127.0.0.1:6443"
+    replace: "https://{{ groups['master'][0] }}:6443"
+
+- name: Get k3s kubeconfig
+  fetch:
+    src: /etc/rancher/k3s/k3s.yaml
+    dest: "{{ playbook_dir }}/kubeconfig.k3s"
+    flat: yes
+  register: k3s_kubeconfig
+
+- name: Backup kubeconfig
+  copy:
+    src: ~/.kube/config
+    dest: ~/.kube/config.bak
+  delegate_to: localhost
+  become: no
+  ignore_errors: yes
+
+- name: Set kube context
+  command: "kubectx k3s=default"
+  delegate_to: localhost
+  become: no
