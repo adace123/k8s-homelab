@@ -5,4 +5,5 @@
 *.key
 tls-secret.yaml
 *.csr
-kubeconfig
+kubeconfig.k3s
+*.png
