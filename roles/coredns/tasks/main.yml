@@ -12,19 +12,19 @@
         create: true
       zoneFiles:
         - filename: kubelocal.db
-          domain: "{{ k8s_base_domain }}"
+          domain: "{{ k8s_dns_domain }}"
           contents: |
-            {{ k8s_base_domain }}.   IN SOA sns.dns.icann.com. noc.dns.icann.com. 2015082541 7200 3600 1209600 3600
-            {{ k8s_base_domain }}.   IN NS  192.168.20.100
-            {{ k8s_base_domain }}.   IN A   192.168.20.100
-            *.{{ k8s_base_domain }}. IN A   192.168.20.100
+            {{ k8s_dns_domain }}.   IN SOA sns.dns.icann.com. noc.dns.icann.com. 2015082541 7200 3600 1209600 3600
+            {{ k8s_dns_domain }}.   IN NS  {{ groups['master'][0] }}
+            {{ k8s_dns_domain }}.   IN A   {{ groups['master'][0] }}
+            *.{{ k8s_dns_domain }}. IN A   {{ groups['master'][0] }}
       servers:
       - zones:
         - zone: .
         port: 53
         plugins:
           - name: file
-            parameters: "/etc/coredns/kubelocal.db {{ k8s_base_domain }} *.{{ k8s_base_domain }}"
+            parameters: "/etc/coredns/kubelocal.db {{ k8s_dns_domain }} *.{{ k8s_dns_domain }}"
           - name: errors
           - name: health
             configBlock: |-
