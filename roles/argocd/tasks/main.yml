@@ -73,7 +73,7 @@
           namespace: default
         project: default
         source:
-          path: apps/
+          path: applications/
           repoURL: git@github.com:adace123/k8s-homelab.git
           targetRevision: HEAD
         syncPolicy:
