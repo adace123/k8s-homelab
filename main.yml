@@ -52,26 +52,13 @@
         - {'name': 'coredns', 'url': 'https://coredns.github.io/helm'}
         - {'name': 'jetstack', 'url': 'https://charts.jetstack.io'}
 
-    - name: Create namespaces
-      community.kubernetes.k8s:
-        name: "{{ item }}"
-        api_version: v1
-        kind: Namespace
-        state: present
-      with_items:
-        - prometheus-grafana
-        - argo-cd
-        - traefik
-        - coredns
-        - cert-manager
+    # - name: Install Traefik
+    #   include_role:
+    #     name: traefik
 
-    - name: Install Traefik
-      include_role:
-        name: traefik
-
-    - name: Setup CoreDNS
-      include_role:
-        name: coredns
+    # - name: Setup CoreDNS
+    #   include_role:
+    #     name: coredns
 
     # - name: Cert Manager
     #   include_role:

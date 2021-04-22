@@ -7,3 +7,5 @@ tls-secret.yaml
 *.csr
 kubeconfig.k3s
 *.png
+roles/argocd/files/github-ssh-secret.yml
+password.txt

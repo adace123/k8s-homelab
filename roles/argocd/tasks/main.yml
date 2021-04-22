@@ -1,24 +1,58 @@
+- name: Create Argo CD repo secret
+  include_tasks: "{{ playbook_dir }}/roles/argocd/tasks/create-github-secret.yml" 
+
+- name: Add Argo Helm repo
+  community.kubernetes.helm_repository:
+    name: argo
+    repo_url: https://argoproj.github.io/argo-helm
+
 - name: Install ArgoCD
   community.kubernetes.helm:
     name: argo-cd
     chart_ref: argo/argo-cd
     release_namespace: argo-cd
+    create_namespace: yes
     wait: yes
     atomic: yes
-    wait_timeout: 5m
+    wait_timeout: 10m
     values:
+      global:
+        image:
+          repository: alinbalutoiu/argocd
+          tag: v2.0.0
+      redis:
+        image:
+          repository: arm32v7/redis
+          tag: 5-alpine3.13
       server:
         extraArgs:
           - --insecure
         ingress:
           enabled: true
-          annotations:
-            kubernetes.io/ingress.class: traefik
-            cert-manager.io/cluster-issuer: cluster-cert-issuer
           hosts:
-            - "argocd.{{ k8s_base_domain }}"
+            - "argocd.{{ k8s_dns_domain }}"
           tls:
-            - secretName: argocd-tls
+            - secretName: argo-cd-tls
               hosts:
-                - "argocd.{{ k8s_base_domain }}"
-  register: argocd
+                - "argocd.{{ k8s_dns_domain }}"
+        config:
+          repositories: |
+            - type: helm
+              url: https://charts.helm.sh/stable
+              name: stable
+            - type: helm
+              url: https://helm.traefik.io/traefik
+              name: traefik
+            - type: helm
+              url: https://coredns.github.io/helm
+              name: coredns
+            - type: helm
+              url: https://charts.jetstack.io
+              name: jetstack
+            - url: git@github.com:adace123/k8s-homelab.git
+              sshPrivateKeySecret:
+                name: github-ssh-key
+                key: ssh_key
+      dex:
+        enabled: false
+  
