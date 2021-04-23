@@ -7,7 +7,7 @@ metadata:
 spec:
   wait: true
   releaseName: prometheus
-  targetNamespace: prometheus-grafana
+  targetNamespace: prometheus
   chart:
     repository: https://prometheus-community.github.io/helm-charts/
     name: prometheus

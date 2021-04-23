@@ -1,0 +1,49 @@
+- name: Create Flux namespace
+  community.kubernetes.k8s:
+    apply: yes
+    definition:
+      apiVersion: v1
+      kind: Namespace
+      metadata:
+        name: flux
+
+# - name: Create Flux repo secret
+#   include_tasks: "{{ playbook_dir }}/roles/flux/tasks/create-github-secret.yml" 
+
+- name: Add Flux Helm repo
+  community.kubernetes.helm_repository:
+    name: fluxcd
+    repo_url: https://charts.fluxcd.io
+
+- name: Install Flux
+  community.kubernetes.helm:
+    name: flux
+    chart_ref: fluxcd/flux
+    release_namespace: flux
+    create_namespace: yes
+    wait: yes
+    atomic: yes
+    wait_timeout: 10m
+    values:
+      image:
+        repository: raspbernetes/flux
+        tag: latest
+      git:
+        url: git@github.com:adace123/k8s-homelab.git
+        path: applications/
+
+- name: Install Flux Helm operator
+  community.kubernetes.helm:
+    name: helm-operator
+    chart_ref: fluxcd/helm-operator
+    release_namespace: flux
+    create_namespace: yes
+    wait: yes
+    atomic: yes
+    wait_timeout: 10m
+    values:
+      image:
+        repository: raspbernetes/helm-operator
+        tag: latest
+      helm:
+        versions: v3
