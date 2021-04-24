@@ -12,3 +12,7 @@ spec:
     repository: https://prometheus-community.github.io/helm-charts/
     name: prometheus
     version: 13.3.3
+  values:
+    kubeStateMetrics:
+      image: carlosedp/arm_exporter
+      tag: latest
