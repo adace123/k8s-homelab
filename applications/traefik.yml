@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: traefik
+---
+
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: traefik
+  namespace: flux
+spec:
+  wait: true
+  releaseName: traefik
+  targetNamespace: traefik
+  chart:
+    repository: https://helm.traefik.io/traefik
+    name: traefik
+    version: 9.18.2
+  values:
+    providers:
+      kubernetesIngress:
+        publishedService:
+          enabled: true
+
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: dashboard
+  namespace: traefik
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`traefik.k8s.homelab`)
+      kind: Rule
+      services:
+        - name: api@internal
+          kind: TraefikService
