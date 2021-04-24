@@ -7,8 +7,8 @@
       metadata:
         name: flux
 
-# - name: Create Flux repo secret
-# include_tasks: "{{ playbook_dir }}/roles/flux/tasks/create-github-secret.yml" 
+- name: Create Flux repo secret
+  include_tasks: "{{ playbook_dir }}/roles/flux/tasks/create-github-secret.yml" 
 
 - name: Add Flux Helm repo
   community.kubernetes.helm_repository:
