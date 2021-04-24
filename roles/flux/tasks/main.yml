@@ -8,7 +8,7 @@
         name: flux
 
 # - name: Create Flux repo secret
-#   include_tasks: "{{ playbook_dir }}/roles/flux/tasks/create-github-secret.yml" 
+# include_tasks: "{{ playbook_dir }}/roles/flux/tasks/create-github-secret.yml" 
 
 - name: Add Flux Helm repo
   community.kubernetes.helm_repository:
@@ -31,6 +31,10 @@
       git:
         url: git@github.com:adace123/k8s-homelab.git
         path: applications/
+        branch: main
+        secretName: flux-ssh
+      sync:
+        interval: 1m
 
 - name: Install Flux Helm operator
   community.kubernetes.helm:
