@@ -21,44 +21,44 @@ spec:
     isClusterService: false
     rbac:
       create: true
-      zoneFiles:
-        - filename: kubelocal.db
-          domain: "k8s.local"
-          contents: |
-            k8s.local.   IN SOA sns.dns.icann.com. noc.dns.icann.com. 2015082541 7200 3600 1209600 3600
-            k8s.local.   IN NS  192.168.4.25
-            k8s.local.   IN A   192.168.4.25
-            *.k8s.local. IN A   192.168.4.25
-      servers:
-      - zones:
-        - zone: .
-        port: 53
-        plugins:
-          - name: file
-            parameters: "/etc/coredns/kubelocal.db k8s.local *.k8s.local"
-          - name: errors
-          - name: health
-            configBlock: |-
-              lameduck 5s
-          - name: ready
-          - name: kubernetes
-            parameters: cluster.local in-addr.arpa ip6.arpa
-            configBlock: |-
-              pods insecure
-              fallthrough in-addr.arpa ip6.arpa
-              ttl 30
-          - name: prometheus
-            parameters: 0.0.0.0:9153
-          - name: forward
-            parameters: . tls://1.1.1.1 tls://1.0.0.1
-            configBlock: |
-              tls_servername cloudflare-dns.com
-              health_check 5s
-          - name: cache
-            parameters: 30
-          - name: loop
-          - name: reload
-          - name: loadbalance
+    zoneFiles:
+      - filename: kubelocal.db
+        domain: "k8s.local"
+        contents: |
+          k8s.local.   IN SOA sns.dns.icann.com. noc.dns.icann.com. 2015082541 7200 3600 1209600 3600
+          k8s.local.   IN NS  192.168.4.25
+          k8s.local.   IN A   192.168.4.25
+          *.k8s.local. IN A   192.168.4.25
+    servers:
+    - zones:
+      - zone: .
+      port: 53
+      plugins:
+        - name: file
+          parameters: "/etc/coredns/kubelocal.db k8s.local *.k8s.local"
+        - name: errors
+        - name: health
+          configBlock: |-
+            lameduck 5s
+        - name: ready
+        - name: kubernetes
+          parameters: cluster.local in-addr.arpa ip6.arpa
+          configBlock: |-
+            pods insecure
+            fallthrough in-addr.arpa ip6.arpa
+            ttl 30
+        - name: prometheus
+          parameters: 0.0.0.0:9153
+        - name: forward
+          parameters: . tls://1.1.1.1 tls://1.0.0.1
+          configBlock: |
+            tls_servername cloudflare-dns.com
+            health_check 5s
+        - name: cache
+          parameters: 30
+        - name: loop
+        - name: reload
+        - name: loadbalance
 ---
 
 apiVersion: v1
