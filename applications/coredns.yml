@@ -1,0 +1,76 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: coredns
+---
+
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: coredns
+  namespace: flux
+spec:
+  wait: true
+  releaseName: coredns
+  targetNamespace: coredns
+  chart:
+    repository: https://coredns.github.io/helm
+    name: coredns
+    version: 1.8.0
+  values:
+    isClusterService: false
+    rbac:
+      create: true
+      zoneFiles:
+        - filename: kubelocal.db
+          domain: "k8s.homelab"
+          contents: |
+            k8s.homelab.   IN SOA sns.dns.icann.com. noc.dns.icann.com. 2015082541 7200 3600 1209600 3600
+            k8s.homelab.   IN NS  192.168.4.25
+            k8s.homelab.   IN A   192.168.4.25
+            *.k8s.homelab. IN A   192.168.4.25
+      servers:
+      - zones:
+        - zone: .
+        port: 53
+        plugins:
+          - name: file
+            parameters: "/etc/coredns/kubelocal.db k8s.homelab *.k8s.homelab"
+          - name: errors
+          - name: health
+            configBlock: |-
+              lameduck 5s
+          - name: ready
+          - name: kubernetes
+            parameters: cluster.local in-addr.arpa ip6.arpa
+            configBlock: |-
+              pods insecure
+              fallthrough in-addr.arpa ip6.arpa
+              ttl 30
+          - name: prometheus
+            parameters: 0.0.0.0:9153
+          - name: forward
+            parameters: . tls://1.1.1.1 tls://1.0.0.1
+            configBlock: |
+              tls_servername cloudflare-dns.com
+              health_check 5s
+          - name: cache
+            parameters: 30
+          - name: loop
+          - name: reload
+          - name: loadbalance
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: coredns-lb
+  namespace: coredns
+spec:
+  type: LoadBalancer
+  ports:
+    - name: udp
+      port: 53
+      protocol: UDP
+  selector:
+    app.kubernetes.io/name: coredns
