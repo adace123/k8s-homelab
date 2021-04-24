@@ -7,8 +7,8 @@
       metadata:
         name: flux
 
-- name: Create Flux repo secret
-  include_tasks: "{{ playbook_dir }}/roles/flux/tasks/create-github-secret.yml" 
+- name: Create Flux SSH key secret
+  include_tasks: "{{ playbook_dir }}/roles/flux/tasks/create-ssh-key-secret.yml" 
 
 - name: Add Flux Helm repo
   community.kubernetes.helm_repository:
@@ -33,8 +33,8 @@
         path: applications/
         branch: main
         secretName: flux-ssh
-      sync:
-        interval: 1m
+        secretDataKey: identity
+        pollInterval: 1m
 
 - name: Install Flux Helm operator
   community.kubernetes.helm:
