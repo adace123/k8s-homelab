@@ -14,7 +14,7 @@ spec:
   releaseName: coredns
   targetNamespace: coredns
   chart:
-    repository: https://coredns.github.io/helm
+    repository: https://charts.helm.sh/stable
     name: coredns
     version: 1.8.0
   values:
