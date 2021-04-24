@@ -13,6 +13,6 @@ spec:
     name: prometheus
     version: 13.3.3
   values:
-    kubeStateMetrics:
+    kube-state-metrics:
       image: carlosedp/arm_exporter
       tag: latest
