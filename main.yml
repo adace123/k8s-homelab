@@ -21,7 +21,7 @@
     KUBECONFIG: "{{ playbook_dir }}/kubeconfig.k3s"
   vars:
     git_repo_url: https://github.com/adace123/k8s-homelab.git
-    git_ssh_private_key_name: github
+    git_ssh_private_key_path: "~/.github"
     skip_brew_installs: false
     recreate_tls_cert: false
     k8s_dns_domain: k8s.homelab
@@ -57,7 +57,7 @@
 
     # - name: Setup CoreDNS
     #   include_role:
-    #     name: coredns
+        # name: coredns
 
     # - name: Cert Manager
     #   include_role:
