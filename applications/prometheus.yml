@@ -15,5 +15,5 @@ spec:
   values:
     kube-state-metrics:
       image:
-        repository: carlosedp/arm_exporter
-        tag: latest
+        repository: carlosedp/kube-state-metrics
+        tag: v1.9.6
