@@ -14,6 +14,6 @@ spec:
     version: 13.3.3
   values:
     kube-state-metrics:
-      image: carlosedp/arm_exporter
-      tag: latest
-      pullPolicy: IfNotPresent
+      image:
+        repository: carlosedp/arm_exporter
+        tag: latest
