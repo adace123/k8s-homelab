@@ -35,6 +35,8 @@
         secretName: flux-ssh
         secretDataKey: identity
         pollInterval: 1m
+      syncGarbageCollection:
+        enabled: true
 
 - name: Install Flux Helm operator
   community.kubernetes.helm:
