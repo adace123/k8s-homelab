@@ -33,7 +33,7 @@ spec:
   entryPoints:
     - web
   routes:
-    - match: Host(`traefik.k8s.local`)
+    - match: Host(`traefik.k8s.dev`)
       kind: Rule
       services:
         - name: api@internal
