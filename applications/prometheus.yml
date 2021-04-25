@@ -27,3 +27,7 @@ spec:
         enabled: true
         hosts:
           - prometheus.k8s.dev
+        tls:
+          - secretName: prometheus-server-tls
+            hosts:
+              - prometheus.k8s.dev
