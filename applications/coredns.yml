@@ -29,12 +29,12 @@ spec:
           k8s.dev.   IN NS  192.168.4.25
           k8s.dev.   IN A   192.168.4.25
           *.k8s.dev. IN A   192.168.4.25
-      - filename: k8shomelab.db
-        domain: k8shomelab.duckdns.org
-        contents: |
-          k8shomelab.duckdns.org. IN SOA sns.dns.icann.com. noc.dns.icann.com. 2015082541 7200 3600 1209600 3600
-          k8shomelab.duckdns.org. IN NS  192.168.4.25
-          k8shomelab.duckdns.org. IN CNAME k8s.dev.
+      # - filename: k8shomelab.db
+      #   domain: k8shomelab.duckdns.org
+      #   contents: |
+      #     k8shomelab.duckdns.org. IN SOA sns.dns.icann.com. noc.dns.icann.com. 2015082541 7200 3600 1209600 3600
+      #     k8shomelab.duckdns.org. IN NS  192.168.4.25
+      #     k8shomelab.duckdns.org. IN CNAME k8s.dev.
     servers:
     - zones:
       - zone: .
@@ -42,8 +42,8 @@ spec:
       plugins:
         - name: file
           parameters: "/etc/coredns/kubelocal.db k8s.dev *.k8s.dev"
-        - name: file
-          parameters: "/etc/coredns/k8shomelab.db k8shomelab.duckdns.org"
+        # - name: file
+        #   parameters: "/etc/coredns/k8shomelab.db k8shomelab.duckdns.org"
         - name: errors
         - name: health
           configBlock: |-
