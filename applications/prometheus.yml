@@ -1,9 +1,14 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: prometheus
+
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
   name: prometheus
-  namespace: default
+  namespace: flux
 spec:
   wait: true
   releaseName: prometheus
@@ -17,3 +22,7 @@ spec:
       image:
         repository: carlosedp/kube-state-metrics
         tag: v1.9.6
+    ingress:
+      enabled: true
+      hosts:
+        - prometheus.k8s.dev
