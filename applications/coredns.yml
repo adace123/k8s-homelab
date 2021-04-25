@@ -23,20 +23,20 @@ spec:
       create: true
     zoneFiles:
       - filename: kubelocal.db
-        domain: "k8s.homelab"
+        domain: "k8s.dev"
         contents: |
-          k8s.homelab.   IN SOA sns.dns.icann.com. noc.dns.icann.com. 2015082541 7200 3600 1209600 3600
-          k8s.homelab.   IN NS  192.168.4.25
-          k8s.homelab.   IN A   192.168.4.25
-          *.k8s.homelab. IN A   192.168.4.25
-          k8s.homelab.    IN CNAME k8shomelab.duckdns.org
+          k8s.dev.   IN SOA sns.dns.icann.com. noc.dns.icann.com. 2015082541 7200 3600 1209600 3600
+          k8s.dev.   IN NS  192.168.4.25
+          k8s.dev.   IN A   192.168.4.25
+          *.k8s.dev. IN A   192.168.4.25
+          k8s.dev.    IN CNAME k8shomelab.duckdns.org
     servers:
     - zones:
       - zone: .
       port: 53
       plugins:
         - name: file
-          parameters: "/etc/coredns/kubelocal.db k8s.homelab *.k8s.homelab"
+          parameters: "/etc/coredns/kubelocal.db k8s.dev *.k8s.dev"
         - name: errors
         - name: health
           configBlock: |-
