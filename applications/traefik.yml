@@ -22,6 +22,9 @@ spec:
       kubernetesIngress:
         publishedService:
           enabled: true
+    logs:
+      general:
+        level: DEBUG
 
 ---
 apiVersion: traefik.containo.us/v1alpha1
