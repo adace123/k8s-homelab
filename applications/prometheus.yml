@@ -31,3 +31,5 @@ spec:
           - secretName: prometheus-server-tls
             hosts:
               - prometheus.k8s.dev
+        annotations:
+          cert-manager.io/cluster-issuer: "letsencrypt-staging"
