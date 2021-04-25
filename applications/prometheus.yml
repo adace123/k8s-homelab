@@ -22,7 +22,8 @@ spec:
       image:
         repository: carlosedp/kube-state-metrics
         tag: v1.9.6
-    ingress:
-      enabled: true
-      hosts:
-        - prometheus.k8s.dev
+    server:
+      ingress:
+        enabled: true
+        hosts:
+          - prometheus.k8s.dev
