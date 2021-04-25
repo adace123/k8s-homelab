@@ -29,7 +29,7 @@ spec:
           k8s.dev.   IN NS  192.168.4.25
           k8s.dev.   IN A   192.168.4.25
           *.k8s.dev. IN A   192.168.4.25
-          k8s.dev.    IN CNAME k8shomelab.duckdns.org
+          *.k8s.dev    IN CNAME k8shomelab.duckdns.org
     servers:
     - zones:
       - zone: .
