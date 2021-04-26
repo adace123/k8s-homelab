@@ -30,6 +30,6 @@ spec:
         tls:
           - secretName: prometheus-server-tls
             hosts:
-              - prometheus.k8s.dev
+              - prometheus.k8shomelab.duckdns.org
         annotations:
           cert-manager.io/cluster-issuer: "cert-manager-webhook-duckdns-staging"
