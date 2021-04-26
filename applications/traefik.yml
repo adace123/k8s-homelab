@@ -22,10 +22,15 @@ spec:
       kubernetesIngress:
         publishedService:
           enabled: true
-    logs:
-      general:
-        level: DEBUG
-
+    ingressRoute:
+      dashboard:
+        enabled: false
+    ports:
+      websecure:
+        tls:
+          enabled: true
+          domains:
+            - k8shomelab.duckdns.org
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
