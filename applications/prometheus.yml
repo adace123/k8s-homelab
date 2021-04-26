@@ -26,10 +26,10 @@ spec:
       ingress:
         enabled: true
         hosts:
-          - prometheus.k8shomelab.duckdns.org/
+          - prometheus.k8shomelab.duckdns.org
         tls:
           - secretName: prometheus-server-tls
             hosts:
               - prometheus.k8shomelab.duckdns.org
         annotations:
-          cert-manager.io/cluster-issuer: "letsencrypt-staging"
+          cert-manager.io/cluster-issuer: "letsencrypt-prod"
