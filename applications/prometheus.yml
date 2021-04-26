@@ -26,7 +26,7 @@ spec:
       ingress:
         enabled: true
         hosts:
-          - prometheus.k8s.dev
+          - prometheus.k8shomelab.duckdns.org/
         tls:
           - secretName: prometheus-server-tls
             hosts:
