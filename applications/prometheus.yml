@@ -33,3 +33,4 @@ spec:
               - prometheus.k8shomelab.duckdns.org
         annotations:
           cert-manager.io/cluster-issuer: "letsencrypt-prod"
+          traefik.ingress.kubernetes.io/router.tls: "true"
