@@ -32,4 +32,4 @@ spec:
             hosts:
               - prometheus.k8shomelab.duckdns.org
         annotations:
-          cert-manager.io/cluster-issuer: "cert-manager-webhook-duckdns-staging"
+          cert-manager.io/cluster-issuer: "cert-manager-webhook-duckdns-production"
