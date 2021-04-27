@@ -32,6 +32,9 @@ kind: Ingress
 metadata:
   name: traefik-dashboard-ingress
   namespace: traefik
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    traefik.ingress.kubernetes.io/router.tls: "true"
 spec:
   tls:
   - hosts:
