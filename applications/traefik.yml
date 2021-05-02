@@ -22,32 +22,3 @@ spec:
       kubernetesIngress:
         publishedService:
           enabled: true
-    ingressRoute:
-      dashboard:
-        enabled: false
-
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: traefik-dashboard-ingress
-  namespace: traefik
-  annotations:
-    cert-manager.io/cluster-issuer: "letsencrypt-prod"
-    traefik.ingress.kubernetes.io/router.tls: "true"
-spec:
-  tls:
-  - hosts:
-      - traefik.k8shomelab.duckdns.org
-    secretName: traefik-dashboard-tls
-  rules:
-  - host: traefik.k8shomelab.duckdns.org
-    http:
-      paths:
-      - path: /dashboard
-        pathType: Prefix
-        backend:
-          service:
-            name: traefik
-            port:
-              number: 80
