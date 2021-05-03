@@ -22,6 +22,20 @@ spec:
       kubernetesIngress:
         publishedService:
           enabled: true
-    ingressRoute:
-      dashboard:
-        enabled: true
+
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: traefik-web-ui
+  namespace: traefik
+spec:
+  entryPoints:
+    - web
+    - websecure
+  routes:
+  - match: PathPrefix(`/api`) || PathPrefix(`/dashboard`)
+    kind: Rule
+    services:
+    - name: api@internal
+      kind: TraefikService
