@@ -1,0 +1,24 @@
+- name: Check that Flux is up and running
+  command: flux check
+  ignore_errors: yes
+  register: flux_check
+
+- name: Get decrypted Github token
+  vars:
+    github_token: !vault |
+      $ANSIBLE_VAULT;1.2;AES256;dev
+      36363961613837613432653761396135376465366362653535366639653235353161306634666437
+      3164356266323862353166616234356562356536356336640a343331376535313733393530393365
+      37373561653861343661383437343433373562356631663139623537376436306565653262373139
+      6264383838323139320a396234366561666332323837303362663365633266616138303162313439
+      66373937303631326631343834663630653665306234313735393133373664396532663332363033
+      3232376334393564313562303231333631653661616564336466
+  set_fact:
+    github_token: "{{ github_token.strip() }}"
+  when: "flux_check.failed"
+
+- name: Setup Flux
+  environment:
+    GITHUB_TOKEN: "{{ github_token }}"
+  command: flux bootstrap github --owner=adace123 --repository=k8s-homelab --path=applications
+  when: "flux_check.failed"
