@@ -76,6 +76,7 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     traefik.ingress.kubernetes.io/router.tls: "true"
+    traefik.ingress.kubernetes.io/rewrite-target: /dashboard/
   name: traefik-dashboard
   namespace: traefik
 spec:
@@ -89,6 +90,13 @@ spec:
             port:
               number: 80
         path: /dashboard
+        pathType: ImplementationSpecific
+      - backend:
+          service:
+            name: traefik-dashboard
+            port:
+              number: 80
+        path: /api
         pathType: ImplementationSpecific
   tls:
   - hosts:
