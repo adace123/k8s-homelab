@@ -3,20 +3,31 @@ kind: Namespace
 metadata:
   name: coredns
 ---
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: coredns
+  namespace: coredns
+spec:
+  interval: 10m
+  url: https://coredns.github.io/helm
 
-apiVersion: helm.fluxcd.io/v1
+---
+
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: coredns
-  namespace: flux
+  namespace: coredns
 spec:
-  wait: true
-  releaseName: coredns
-  targetNamespace: coredns
+  interval: 10m
   chart:
-    repository: https://coredns.github.io/helm
-    name: coredns
-    version: 1.15.0
+    spec:
+      chart: coredns
+      version: 1.15.0
+      sourceRef:
+        kind: HelmRepository
+        name: coredns
   values:
     isClusterService: false
     rbac:
