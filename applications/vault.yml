@@ -40,8 +40,5 @@ spec:
         - secretName: vault-tls
           hosts:
             - vault.k8shomelab.duckdns.org
-    server:
-      dataStorage:
-        size: 5Gi
     ui:
       enabled: true
